@@ -1,0 +1,26 @@
+{
+  "none": {
+    "mAP50": 0.6253,
+    "mAP50_95": 0.371,
+    "Precision": 0.6747,
+    "Recall": 0.596
+  },
+  "full": {
+    "mAP50": 0.783,
+    "mAP50_95": 0.54,
+    "Precision": 0.9182,
+    "Recall": 0.6476
+  },
+  "learned_factorized_g1": {
+    "mAP50": 0.7685,
+    "mAP50_95": 0.5403,
+    "Precision": 0.8615,
+    "Recall": 0.6838
+  },
+  "uniform_g1": {
+    "mAP50": 0.6619,
+    "mAP50_95": 0.4077,
+    "Precision": 0.7757,
+    "Recall": 0.6217
+  }
+}

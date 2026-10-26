@@ -1,0 +1,32 @@
+{
+  "none": {
+    "mAP50": 0.5887,
+    "mAP50_95": 0.3438,
+    "Precision": 0.7291,
+    "Recall": 0.534
+  },
+  "full": {
+    "mAP50": 0.6922,
+    "mAP50_95": 0.4452,
+    "Precision": 0.8209,
+    "Recall": 0.6084
+  },
+  "task_only_g1": {
+    "mAP50": 0.6722,
+    "mAP50_95": 0.4327,
+    "Precision": 0.8072,
+    "Recall": 0.5884
+  },
+  "task_bin_g1": {
+    "mAP50": 0.6674,
+    "mAP50_95": 0.4278,
+    "Precision": 0.8166,
+    "Recall": 0.5839
+  },
+  "prod_bin_g1": {
+    "mAP50": 0.6624,
+    "mAP50_95": 0.4178,
+    "Precision": 0.7854,
+    "Recall": 0.5881
+  }
+}

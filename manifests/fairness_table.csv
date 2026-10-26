@@ -1,0 +1,11 @@
+method,category,provenance,aligned_reg,misaligned,gain_from_registration,delta_rob
+SAGE-IVIF,semantic-aware,official release,0.6420,0.5525,+0.0529,-0.0895
+FusionMamba,general deep,local ckpt; source not documented,0.6329,0.5249,+0.0438,-0.1080
+SeAFusion,task/semantic,official release,0.6326,0.5371,+0.0435,-0.0955
+CDDFuse,general deep,official release (IVF),0.6212,0.5248,+0.0321,-0.0964
+DenseFuse,classical,local ckpt; source not documented,0.6190,0.5207,+0.0299,-0.0983
+CAF-IVIF,general deep,official release (Det),0.6127,0.4923,+0.0236,-0.1204
+TDFusion,task-aware,official release (M3FD),0.6066,0.5267,+0.0175,-0.0799
+Text-IF,text-guided,official release,0.5988,0.5021,+0.0097,-0.0967
+TarDAL,task-aware,official release (dt),0.5790,0.4321,-0.0101,-0.1469
+SuperFusion,registration--fusion,official release (MSRS),0.4476,0.4406,-0.1415,-0.0070

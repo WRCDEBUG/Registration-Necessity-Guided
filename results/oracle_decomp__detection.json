@@ -1,0 +1,38 @@
+{
+  "none": {
+    "mAP50": 0.8121,
+    "mAP50_95": 0.3801,
+    "Precision": 0.8949,
+    "Recall": 0.7521
+  },
+  "full": {
+    "mAP50": 0.9009,
+    "mAP50_95": 0.6664,
+    "Precision": 0.9478,
+    "Recall": 0.8463
+  },
+  "oracle_geom_g1": {
+    "mAP50": 0.8491,
+    "mAP50_95": 0.5796,
+    "Precision": 0.9458,
+    "Recall": 0.7713
+  },
+  "oracle_product_g1": {
+    "mAP50": 0.8622,
+    "mAP50_95": 0.6078,
+    "Precision": 0.9441,
+    "Recall": 0.7893
+  },
+  "oracle_task_g1": {
+    "mAP50": 0.9011,
+    "mAP50_95": 0.6648,
+    "Precision": 0.9571,
+    "Recall": 0.8428
+  },
+  "uniform_g1": {
+    "mAP50": 0.7803,
+    "mAP50_95": 0.4358,
+    "Precision": 0.9129,
+    "Recall": 0.7012
+  }
+}

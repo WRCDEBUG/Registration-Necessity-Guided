@@ -1,0 +1,74 @@
+{
+  "none": {
+    "mAP50": 0.5887,
+    "mAP50_95": 0.3438,
+    "Precision": 0.7291,
+    "Recall": 0.534
+  },
+  "full": {
+    "mAP50": 0.6922,
+    "mAP50_95": 0.4452,
+    "Precision": 0.8209,
+    "Recall": 0.6084
+  },
+  "oracle_geom_g1": {
+    "mAP50": 0.6689,
+    "mAP50_95": 0.4152,
+    "Precision": 0.7767,
+    "Recall": 0.5991
+  },
+  "oracle_task_g1": {
+    "mAP50": 0.6865,
+    "mAP50_95": 0.4444,
+    "Precision": 0.8068,
+    "Recall": 0.6069
+  },
+  "oracle_product_g1": {
+    "mAP50": 0.6758,
+    "mAP50_95": 0.4264,
+    "Precision": 0.789,
+    "Recall": 0.5976
+  },
+  "uniform_g1": {
+    "mAP50": 0.638,
+    "mAP50_95": 0.3894,
+    "Precision": 0.7365,
+    "Recall": 0.5737
+  },
+  "shuffled_g1": {
+    "mAP50": 0.5721,
+    "mAP50_95": 0.3441,
+    "Precision": 0.6962,
+    "Recall": 0.5329
+  },
+  "learned_g1": {
+    "mAP50": 0.657,
+    "mAP50_95": 0.4095,
+    "Precision": 0.7535,
+    "Recall": 0.5891
+  },
+  "learned_factorized_g1": {
+    "mAP50": 0.67,
+    "mAP50_95": 0.4206,
+    "Precision": 0.7657,
+    "Recall": 0.6065
+  },
+  "task_only_g1": {
+    "mAP50": 0.6722,
+    "mAP50_95": 0.4327,
+    "Precision": 0.8072,
+    "Recall": 0.5884
+  },
+  "abs_g1": {
+    "mAP50": 0.6628,
+    "mAP50_95": 0.4112,
+    "Precision": 0.7451,
+    "Recall": 0.6105
+  },
+  "proxy_net_g1": {
+    "mAP50": 0.6792,
+    "mAP50_95": 0.4343,
+    "Precision": 0.7921,
+    "Recall": 0.6113
+  }
+}
