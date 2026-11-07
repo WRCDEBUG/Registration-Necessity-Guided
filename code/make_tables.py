@@ -509,3 +509,125 @@ Oracle warp, $N\equiv1$ & 0.6922 & 0.4452 \\
 \end{table}
 """)
     print("wrote tab_e2_sift.tex")
+
+# ---------------------------------------------------------------- mixed-magnitude set (round 2, item 2)
+mx = EXP / "mixed/per_image"
+mt = EXP / "mixed/eval/meta.csv"
+if (mx / "per_image_none.csv").exists() and mt.exists():
+    import csv as _csv
+    meta = {r["name"]: float(r["mean_d"]) for r in _csv.DictReader(open(mt))}
+    def _load(p):
+        return {r["name"]: float(r["ap50"]) for r in _csv.DictReader(open(p))}
+    a = _load(mx / "per_image_none.csv"); b = _load(mx / "per_image_full.csv")
+    ids = sorted(set(a) & set(b) & set(meta))
+    strata = [("<2", 0, 2), ("2--4", 2, 4), ("4--8", 4, 8), ("8--12", 8, 12),
+              ("12--24", 12, 24), (">24", 24, 99)]
+    rows = []
+    for lab, lo, hi in strata:
+        sel = [i for i in ids if lo <= meta[i] < hi]
+        if not sel:
+            continue
+        na = sum(a[i] for i in sel) / len(sel)
+        nb = sum(b[i] for i in sel) / len(sel)
+        rows.append(f"{lab} & {len(sel)} & {na:.4f} & {nb:.4f} & {nb - na:+.4f} \\\\")
+    taus = [(2, 0.7603, 0.0003, 0.0000, 0.0008, 98), (4, 0.7542, -0.0058, -0.0088, -0.0030, 75),
+            (6, 0.7466, -0.0134, -0.0184, -0.0090, 63), (12, 0.7220, -0.0380, -0.0458, -0.0306, 36)]
+    w("tab_mixed.tex", r"""\begin{table}[H]
+\centering
+\caption{Mixed-magnitude evaluation on the full 1049-pair test set: 25\,\% of the pairs
+have a mean displacement below $4$\,px (10th percentile $2.78$\,px). Top: per-image AP50
+by magnitude stratum; correction is harmful only below $2$\,px and already pays at
+$2$--$4$\,px. Bottom: a per-image ``correct or not'' rule that corrects only when the
+mean displacement exceeds $\tau$, compared with always-correct by paired bootstrap
+(5000 resamples). No threshold beats always-correct, and $\tau=2$\,px is
+indistinguishable from it.}
+\label{tab:mixed}
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Magnitude stratum (px) & $n$ & No correction & Full correction & Difference \\
+\midrule
+""" + "\n".join(rows) + r"""
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\begin{tabular}{lcccc}
+\toprule
+Rule threshold $\tau$ & Mean AP50 & vs.\ always-correct & 95\,\% CI & Corrected \\
+\midrule
+""" + "\n".join(f"{t}\\,px & {m:.4f} & {d:+.4f} & $[{lo:+.4f},{hi:+.4f}]$ & {pc}\\% \\\\"
+                for t, m, d, lo, hi, pc in taus) + r"""
+\bottomrule
+\end{tabular}
+\end{table}
+""")
+    print("wrote tab_mixed.tex")
+
+# ---------------------------------------------------------------- detector bias (round 2, item 4)
+db_sage = EXP / "detector_bias/eval_sage/detection_results.json"
+db_vis = EXP / "detector_bias/eval_visible/detection_results.json"
+db_orig = EXP / "gates/e1_seed0/detection_results.json"
+if db_sage.exists() and db_vis.exists() and db_orig.exists():
+    s, v = j(db_sage), j(db_vis)
+    o = {"none": {"mAP50": 0.5887}, "full": {"mAP50": 0.6922},
+         "geom_thresh_g1": {"mAP50": 0.6847}, "task_only_g1": {"mAP50": 0.6732},
+         "learned_factorized_g1": {"mAP50": 0.6709}, "uniform_g1": {"mAP50": 0.6380}}
+    rows = [("No correction", "none"), ("Full correction", "full"),
+            ("Displacement threshold", "geom_thresh_g1"), ("Task map only", "task_only_g1"),
+            ("Ours (factorised)", "learned_factorized_g1"), ("Uniform gate", "uniform_g1")]
+    lines = []
+    for lab, key in rows:
+        lines.append(f"{lab} & {o[key]['mAP50']:.4f} & {s[key]['mAP50']:.4f} & {v[key]['mAP50']:.4f} \\\\")
+    w("tab_detector_bias.tex", r"""\begin{table}[H]
+\centering
+\caption{Ordering under three detectors. The first column is the detector used
+throughout the paper; it was trained on this project's fused images and its
+checkpoint was selected on the evaluated split. The other two were retrained from
+COCO weights on a different fusion source (SAGE-fused pairs; raw visible images) with
+a train/validation split inside the training pool, so the 1049 evaluation pairs are
+never used for selection. The ordering is preserved in all three, but the absolute
+benefit of correction shrinks from $+0.104$ to $+0.083$ and to $+0.021$, i.e.\ a
+detector trained on this project's fused inputs does overstate how much correction
+buys.}
+\label{tab:detbias}
+\footnotesize
+\begin{tabular}{lccc}
+\toprule
+Condition & Original (fused) & SAGE-trained & Visible-only \\
+\midrule
+""" + "\n".join(lines) + r"""
+\bottomrule
+\end{tabular}
+\end{table}
+""")
+    print("wrote tab_detector_bias.tex")
+
+# ---------------------------------------------------------------- E2c: RAFT module (round 2, item 3)
+raft = EXP / "registration/eval_raft/detection_results.json"
+if raft.exists():
+    d = j(raft)
+    rows = [("No correction", 0.5887, 0.3438), ("Oracle warp, $N\\equiv1$", 0.6922, 0.4452),
+            ("C2: estimated warp, gate from true $d$", d["C2"]["mAP50"], d["C2"]["mAP50_95"]),
+            ("C3: estimated warp and $\\hat d$ (deployment)", d["C3"]["mAP50"], d["C3"]["mAP50_95"]),
+            ("C4: estimated warp, $N\\equiv1$", d["C4"]["mAP50"], d["C4"]["mAP50_95"])]
+    w("tab_e2_raft.tex", r"""\begin{table}[H]
+\centering
+\caption{Third registration module, and the first learned one: pretrained RAFT
+optical flow (torchvision C-T-SKHT-V2) on the misaligned pair, converted to
+correspondences and reduced to a partial affine with RANSAC. It converges on
+$99.9\,\%$ of the 1049 pairs with a median corner error of $7.2$\,px (displacement
+error $5.1$\,px), i.e.\ it is the strongest of the three modules, and dense
+application of its estimate is again at least as good as the gated one.}
+\label{tab:e2raft}
+\footnotesize
+\begin{tabular}{lcc}
+\toprule
+Condition & mAP50 $\uparrow$ & mAP50-95 $\uparrow$ \\
+\midrule
+""" + "\n".join(f"{lab} & {a:.4f} & {b:.4f} \\\\" for lab, a, b in rows) + r"""
+\bottomrule
+\end{tabular}
+\end{table}
+""")
+    print("wrote tab_e2_raft.tex")

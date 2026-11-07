@@ -346,6 +346,257 @@ if "We keep the name RN-BC" not in s:
     assert NAME_OLD in s, "method-name anchor missing"
     s = s.replace(NAME_OLD, NAME_NEW, 1)
 
+
+# 15) explicit statement that earlier studies were not reproduced (R1.m9)
+REP_OLD = ("Correlation with geometry is therefore not a proxy for\n"
+           "\tdownstream utility.")
+REP_NEW = ("Correlation with geometry is therefore not a proxy for\n"
+           "\tdownstream utility. We also did not reproduce the datasets used by the earlier\n"
+           "\tproxy-supervised study: its released map is used here only as a baseline under our\n"
+           "\tprotocol, so we make no claim about why earlier studies reported the outcomes they\n"
+           "\tdid, and the unsupported statements in the original manuscript have been removed.")
+if "did not reproduce the datasets" not in s:
+    assert REP_OLD in s, "discussion anchor missing"
+    s = s.replace(REP_OLD, REP_NEW, 1)
+
+
+# 16) round-2 item 1: reframe as protocol + negative result, drop the method name
+TITLE_OLD = ("\\Title{Registration Necessity Is a Magnitude Decision: A Controlled Study of\n"
+             "\tSpatially Selective Correction for Misaligned Infrared--Visible Fusion}")
+TITLE_NEW = ("\\Title{Registration Necessity Is a Magnitude Decision: A Protocol and Negative\n"
+             "\tResult for Spatially Selective Correction in Misaligned Infrared--Visible Fusion}")
+if TITLE_OLD in s:
+    s = s.replace(TITLE_OLD, TITLE_NEW, 1)
+else:
+    print("WARNING: title anchor not matched")
+
+ABS_OLD = ("spatially using a ``registration necessity'' map. We test that premise with a\n"
+           "\tprotocol in which both factors of necessity are measurable:")
+ABS_NEW = ("spatially using a ``registration necessity'' map. We report a \\emph{negative result}\n"
+           "\tfor that premise, obtained with a protocol in which both factors of necessity are\n"
+           "\tmeasurable:")
+if ABS_OLD in s:
+    s = s.replace(ABS_OLD, ABS_NEW, 1)
+else:
+    print("WARNING: abstract anchor not matched")
+
+NAME_OLD = ("We keep the name RN-BC (registration-necessity-guided bounded correction) for\n"
+            "\tcontinuity with the reviewed version, but the study changes what \\emph{necessity}\n"
+            "\tmeans in it: the operative quantity is the global magnitude of the correction, not the\n"
+            "\tspatial allocation of its output. The name therefore describes the correction rule,\n"
+            "\tnot a claim that spatial gating is the better policy.")
+NAME_NEW = ("This section describes the design that is \\emph{tested and rejected} in this paper. We\n"
+            "\tno longer present it as a proposed method and we do not recommend it for deployment:\n"
+            "\tits gated configuration is beaten by dense correction at every magnitude above\n"
+            "\t$\\pm8$\\,px, by a zero-parameter displacement threshold, and by the task map alone,\n"
+            "\tand the multiplicative factorisation is not supported. The released code keeps the\n"
+            "\tinternal name RN-BC used during development so that the artefacts remain traceable.")
+if NAME_OLD in s:
+    s = s.replace(NAME_OLD, NAME_NEW, 1)
+else:
+    print("WARNING: naming paragraph not matched")
+
+s = s.replace("\\section{Proposed Method}", "\\section{Tested Design and Measurement Protocol}", 1)
+s = s.replace("bounded correction (RN-BC). Unless stated otherwise we use the YOLOv8n checkpoint\n"
+              "\tdistributed with the reported RN-BC experiments",
+              "bounded correction. Unless stated otherwise we use the YOLOv8n checkpoint\n"
+              "\tdistributed with the reported experiments", 1)
+s = s.replace("RN-BC itself does not introduce an additional learned", "This design does not introduce an additional learned", 1)
+s = s.replace("the computational cost reported for RN-BC refers to the", "the computational cost reported for this design refers to the", 1)
+s = s.replace("is not jointly trained with RN-BC.", "is not jointly trained with this design.", 1)
+s = s.replace("\t\t\tRN-BC & Registration-necessity-guided bounded correction \\\\\n", "", 1)
+s = s.replace("RN-BC & Registration-necessity-guided bounded correction \\\\\n", "", 1)
+
+
+# 17) round-2 item 1: state the negative result in the contribution list and the outline
+CONTR_OLD = "The contributions of this paper are summarized as follows."
+CONTR_NEW = ("The contribution of this paper is primarily a \\emph{negative} one: a tested,\n"
+             "\treproducible protocol under which spatially selective correction does not deliver what\n"
+             "\tthe current literature expects from it, together with the positive finding that the\n"
+             "\tdecisive quantity is the magnitude of the correction rather than its allocation. The\n"
+             "\tindividual contributions are as follows.")
+if "primarily a \\emph{negative} one" not in s:
+    s = s.replace(CONTR_OLD, CONTR_NEW, 1)
+
+ITEM_OLD = ("\\item We show that necessity is a \\emph{magnitude} decision: at $\\pm2$\\,px\n"
+            "\t\tcorrection is harmful, image-level gating degenerates to ``always correct'' on\n"
+            "\t\tour test set")
+ITEM_NEW = ("\\item We show that necessity is a \\emph{magnitude} decision: at $\\pm2$\\,px\n"
+            "\t\tcorrection is harmful, image-level gating degenerates to ``always correct'' on\n"
+            "\t\tour test set, and on a full-size set with a controlled mixture of magnitudes the\n"
+            "\t\tper-image decision rule is tested against always-correct with a paired interval")
+if ITEM_OLD in s:
+    s = s.replace(ITEM_OLD, ITEM_NEW, 1)
+
+OUT_OLD = "Section~\\ref{sec:method} presents the measurable necessity\n\tdefinition, the estimator, and the bounded correction rule."
+OUT_NEW = ("Section~\\ref{sec:method} defines the tested design and the measurement\n"
+           "\tprotocol, and states why it is not recommended.")
+if OUT_OLD in s:
+    s = s.replace(OUT_OLD, OUT_NEW, 1)
+
+
+# 18) round-2 item 2: the mixed-magnitude result contradicts the magnitude-decision title
+T2_OLD = ("\\Title{Registration Necessity Is a Magnitude Decision: A Protocol and Negative\n"
+          "\tResult for Spatially Selective Correction in Misaligned Infrared--Visible Fusion}")
+T2_NEW = ("\\Title{Registration Necessity Is Not a Spatial-Allocation Problem: A Protocol and\n"
+          "\tNegative Result for Selective Correction in Misaligned Infrared--Visible Fusion}")
+if T2_OLD in s:
+    s = s.replace(T2_OLD, T2_NEW, 1)
+
+ABS_MAG_OLD = ("Separately, the optimal correction strength depends on the")
+ABS_MAG_NEW = ("A controlled mixture of magnitudes on the full evaluation set (a quarter of the pairs\n"
+               "\tbelow $4$\\,px) shows that the harmful regime is confined to $<2$\\,px, that correction\n"
+               "\talready pays at $2$--$4$\\,px, and that no magnitude-threshold rule beats\n"
+               "\talways-correct, so the decision ``correct or not'' does not survive as a policy. "
+               "Separately, the optimal correction strength depends on the")
+if "the harmful regime is confined to" not in s:
+    s = s.replace(ABS_MAG_OLD, ABS_MAG_NEW, 1)
+
+
+# 19) round-2 item 2: mixed-magnitude section
+MIXED = (
+ "\t\\input{tables/tab_mixed}\n"
+ "\t\n"
+ "\tThe magnitude evidence so far came from a 300-pair subset, and the main test set has no\n"
+ "\tsmall-misalignment subgroup (10th percentile of the mean displacement $5.85$\\,px), so the\n"
+ "\tclaim that necessity is a magnitude decision was not tested where it matters. We rebuilt\n"
+ "\tthe evaluation set on all 1049 pairs with a controlled mixture of magnitudes---25\\,\\% of\n"
+ "\tthe pairs below $4$\\,px, median $8.94$\\,px---and re-ran no correction and full correction\n"
+ "\t(Table~\\ref{tab:mixed}). Two findings follow. First, the harmful regime is much narrower\n"
+ "\tthan the synthetic sweep suggested: correction is harmful only below $<2$\\,px\n"
+ "\t($-0.0151$), and it already pays at $2$--$4$\\,px ($+0.0265$, CI $[+0.0152,+0.0391]$).\n"
+ "\tSecond, no per-image rule that corrects only above a threshold $\\tau$ beats\n"
+ "\talways-correct: $\\tau=4$\\,px costs $-0.0058$ (CI $[-0.0088,-0.0030]$), and $\\tau=2$\\,px is\n"
+ "\tindistinguishable from zero ($+0.0003$, CI $[0.0000,+0.0008]$). The decision ``correct or\n"
+ "\tnot'' therefore does not survive as a policy: in practice one should correct, densely.\n"
+ "\n")
+if "\\input{tables/tab_mixed}" not in s:
+    anchor = "\t\\input{tables/tab_nonrigid}"
+    assert anchor in s, "nonrigid anchor missing"
+    s = s.replace(anchor, MIXED + anchor, 1)
+
+
+# 21) round-2 item 5: explain the metric divergence and declare the primary metric
+DIV_OLD = ("The no-correction reference differs slightly from the main table")
+DIV_NEW = ("The two metrics disagree, and we do not attribute the disagreement to a single stratum.\n"
+           "\tSplitting the same 1049 images by the number of annotated objects gives ours$-$SAGE\n"
+           "\t$=+0.017$ (one box, $n=91$), $-0.028$ (two or three, $n=215$) and $-0.019$ (four or\n"
+           "\tmore, $n=743$); splitting by mean object area gives $-0.019$, $-0.011$ and $-0.024$ for\n"
+           "\tthe small, medium and large terciles; and the share of low-confidence detections\n"
+           "\t($\\mathrm{conf}<0.25$) is $84.3\\,\\%$ versus $85.9\\,\\%$. The divergence is therefore a\n"
+           "\tproperty of the aggregation rather than of a region or a size class: dataset-level\n"
+           "\tmAP50 pools one precision--recall curve per class over all images, so it is sensitive to\n"
+           "\thow detections redistribute along the confidence axis, whereas per-image AP50 computes a\n"
+           "\tten-point interpolated curve for every image and averages, weighting each image equally,\n"
+           "\tincluding the 91 single-object images. We report dataset-level mAP50 as the primary\n"
+           "\tmetric because it is the metric used for every comparison in this paper and in the\n"
+           "\tfusion literature, and it is the metric on which the main claims are made; per-image\n"
+           "\tAP50 is kept as a paired diagnostic that supports the bootstrap intervals. Neither\n"
+           "\tmetric is used to claim superiority over the published methods.\n"
+           "\n"
+           "\tThe no-correction reference differs slightly from the main table")
+if "we do not attribute the disagreement to a single stratum" not in s:
+    assert DIV_OLD in s, "fairness anchor missing"
+    s = s.replace(DIV_OLD, DIV_NEW, 1)
+
+
+# 22) round-2 item 4: detector bias (three detectors)
+DETB = (
+ "\t\\input{tables/tab_detector_bias}\n"
+ "\t\n"
+ "\tThe frozen detector used in the rest of the paper was trained on fused images produced by\n"
+ "\tthis project and its checkpoint was selected on the split that is later evaluated, both of\n"
+ "\twhich favour pixel-average-like inputs. To test whether the conclusions depend on that\n"
+ "\tchoice we retrained YOLOv8n twice from COCO weights on a different fusion source---SAGE-fused\n"
+ "\ttraining pairs and raw visible images---with a train/validation split inside the training\n"
+ "\tpool, so that the 1049 evaluation pairs are never used for checkpoint selection. The\n"
+ "\tordering is preserved under all three detectors (Table~\\ref{tab:detbias}): full correction\n"
+ "\tfirst, the displacement threshold next, the task map and the factorised gate close together,\n"
+ "\tand the uniform gate above no correction. The absolute benefit of correction, however, is\n"
+ "\tnot preserved: it falls from $+0.104$ with the original detector to $+0.083$ with the\n"
+ "\tSAGE-trained detector and to $+0.021$ with the visible-only detector. The ranking claims\n"
+ "\ttherefore hold, but the size of the effect is partly a property of the detector, and we\n"
+ "\treport the three detectors rather than the most favourable one.\n"
+ "\n")
+if "\\input{tables/tab_detector_bias}" not in s:
+    anchor = "\t\\input{tables/tab_mixed}"
+    assert anchor in s, "mixed anchor missing"
+    s = s.replace(anchor, DETB + anchor, 1)
+
+
+# 23) acronym-first title in the style of a Q2 journal (names the PROTOCOL, not a method)
+T3_OLD = ("\\Title{Registration Necessity Is Not a Spatial-Allocation Problem: A Protocol and\n"
+          "\tNegative Result for Selective Correction in Misaligned Infrared--Visible Fusion}")
+T3_NEW = ("\\Title{SPARC: A Protocol and Negative Result on the Spatial Allocation of\n"
+          "\tRegistration Correction in Misaligned Infrared--Visible Fusion}")
+if T3_OLD in s:
+    s = s.replace(T3_OLD, T3_NEW, 1)
+else:
+    print("WARNING: acronym title anchor not matched")
+
+SPARC_OLD = ("We report a \\emph{negative result}\n"
+             "\tfor that premise, obtained with a protocol in which both factors of necessity are\n"
+             "\tmeasurable:")
+SPARC_NEW = ("We report a \\emph{negative result}\n"
+             "\tfor that premise, obtained with SPARC (Spatial Allocation of Registration Correction),\n"
+             "\ta protocol in which both factors of necessity are measurable:")
+if SPARC_OLD in s:
+    s = s.replace(SPARC_OLD, SPARC_NEW, 1)
+else:
+    print("WARNING: abstract SPARC anchor not matched")
+
+
+# 24) remove the two remaining statements that contradict the mixed-magnitude result
+ABS_TAIL_OLD = ("Separately, the optimal correction strength depends on the\n"
+                "\t\\emph{global} misalignment magnitude---at $\\pm2$\\,px correction is harmful---which\n"
+                "\tmakes necessity a magnitude decision rather than a spatial-allocation problem. We\n"
+                "\trelease the protocol, all gate baselines and per-image predictions.")
+ABS_TAIL_NEW = ("Separately, the optimal correction strength depends on the global\n"
+                "\tmisalignment magnitude, but that dependence does not produce a better policy than\n"
+                "\tcorrecting densely. We release the protocol, all gate baselines and per-image\n"
+                "\tpredictions.")
+if ABS_TAIL_OLD in s:
+    s = s.replace(ABS_TAIL_OLD, ABS_TAIL_NEW, 1)
+else:
+    print("WARNING: abstract tail anchor not matched")
+
+ITEM_OLD = ("\\item We show that necessity is a \\emph{magnitude} decision: at $\\pm2$\\,px\n"
+            "\t\tcorrection is harmful, image-level gating degenerates to ``always correct'' on\n"
+            "\t\tour test set, and on a full-size set with a controlled mixture of magnitudes the\n"
+            "\t\tper-image decision rule is tested against always-correct with a paired interval, and "
+            "fusion-quality metrics only predict downstream performance when\n"
+            "\t\tthe reference is the clean scene rather than the observed misaligned input.")
+ITEM_NEW = ("\\item We test the magnitude argument where it matters: on a full-size set with a\n"
+            "\t\tcontrolled mixture of magnitudes (a quarter of the pairs below $4$\\,px) the harmful\n"
+            "\t\tregime is confined to $<2$\\,px, correction already pays at $2$--$4$\\,px, and no\n"
+            "\t\tthreshold rule beats always-correct, so image-level gating degenerates to ``always\n"
+            "\t\tcorrect'' in practice. Fusion-quality metrics predict downstream performance only\n"
+            "\t\twhen the reference is the clean scene rather than the observed misaligned input.")
+if ITEM_OLD in s:
+    s = s.replace(ITEM_OLD, ITEM_NEW, 1)
+else:
+    print("WARNING: contribution item anchor not matched")
+
+
+# 25) round-2 item 3: learned registrar (RAFT) table + paragraph
+RAFT = (
+ "\t\\input{tables/tab_e2_raft}\n"
+ "\t\n"
+ "\tThe two modules above are classical. We therefore add a learned one: pretrained RAFT optical\n"
+ "\tflow on the misaligned pair, converted to correspondences on a coarse grid and reduced to a\n"
+ "\tpartial affine with RANSAC (Table~\\ref{tab:e2raft}). It converges on $99.9\\,\\%$ of the 1049\n"
+ "\tpairs with a median corner error of $7.2$\\,px and a displacement error of $5.1$\\,px---better\n"
+ "\tthan the gradient-magnitude search ($8.1$\\,px) and with far wider coverage than SIFT\n"
+ "\t($41\\,\\%$). With this module the deployment configuration reaches $0.6267$ and dense\n"
+ "\tapplication of the same estimate $0.6337$, so dense correction is again at least as good as\n"
+ "\tits gated version, and the registration-quality conclusion holds for a learned registrar and\n"
+ "\tnot only for classical ones.\n"
+ "\n")
+if "\\input{tables/tab_e2_raft}" not in s:
+    anchor = "\t\\input{tables/tab_e2_sweep}"
+    assert anchor in s, "e2sweep anchor missing"
+    s = s.replace(anchor, RAFT + anchor, 1)
+
 DST.write_text(s)
 print("wrote", DST.name, len(s.splitlines()), "lines")
 print("url:", "github.com/WRCDEBUG" in s, "| ack removed:", "\\acknowledgments" not in s)
